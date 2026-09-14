@@ -13,7 +13,7 @@ import "../globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL(env.NEXT_PUBLIC_SITE_URL),
   title: {
-    template: "%s | AdCollection",
+    template: "AdCollection - %s",
     default: "AdCollection",
   },
   description:

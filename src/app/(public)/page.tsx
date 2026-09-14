@@ -14,7 +14,9 @@ import { Container } from "@/shared/components/layout/container";
 import { SectionHeader } from "@/shared/components/layout/section-header";
 
 export const metadata: Metadata = {
-  title: "Browse UGC video ads",
+  // The title template only applies to child segments, and this page shares the
+  // layout segment, so the prefix is spelled out here.
+  title: "AdCollection - Browse UGC video ads",
   description:
     "A deep dive into the strategy behind high-converting ad creative. Browse a curated library of the best-performing video ads, rated on audience grab, watchability, and clarity.",
 };

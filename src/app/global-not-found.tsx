@@ -11,7 +11,7 @@ import { inter } from "@/shared/lib/fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: `${NOT_FOUND_TITLE} | AdCollection`,
+  title: `AdCollection - ${NOT_FOUND_TITLE}`,
   description: NOT_FOUND_DESCRIPTION,
 };
 
