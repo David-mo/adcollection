@@ -14,7 +14,7 @@ import {
 import { cn } from "@/shared/lib/utils";
 
 const SUBMIT_AD_URL = "https://teaminbeat.typeform.com/to/odf5iFeS";
-const CREATE_ADS_URL = "https://www.inbeat.co/ugc-platform/";
+const CREATE_ADS_URL = "https://inbeat.agency/";
 
 // The original nav buttons are 12px/500 with 4px corners, not shadcn's pill defaults.
 const navButton =

@@ -4,7 +4,7 @@ import { Container } from "@/shared/components/layout/container";
 const FOOTER_LINKS = [
   { href: "/", label: "Home", external: false },
   { href: "/favorites", label: "Favorites", external: false },
-  { href: "https://www.inbeat.co/ugc-platform/", label: "Create UGC Ads", external: true },
+  { href: "https://inbeat.agency/", label: "Create UGC Ads", external: true },
   { href: "https://teaminbeat.typeform.com/to/odf5iFeS", label: "Submit an ad", external: true },
 ] as const;
 
