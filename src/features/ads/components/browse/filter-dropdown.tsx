@@ -71,7 +71,7 @@ export function FilterDropdown({ label, options, selected, onChange }: FilterDro
                 key={option.value}
                 htmlFor={inputId}
                 className={cn(
-                  "flex items-center gap-3 rounded-sm px-2.5 py-2 transition-colors",
+                  "flex items-center gap-3 rounded-sm px-2.5 py-2 transition-colors text-sm",
                   option.disabled
                     ? "cursor-not-allowed text-subtle"
                     : "cursor-pointer text-body hover:bg-chip",
