@@ -1,0 +1,3 @@
+/* Empty on purpose: the (payload) route group is a separate root layout, so it
+   never inherits ../globals.css (Tailwind) and the public site never sees this
+   file either. */

@@ -1,0 +1,64 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { postgresAdapter } from "@payloadcms/db-postgres";
+import { lexicalEditor } from "@payloadcms/richtext-lexical";
+import { s3Storage } from "@payloadcms/storage-s3";
+import { buildConfig } from "payload";
+import sharp from "sharp";
+import { Ads } from "@/payload/collections/ads";
+import { Categories } from "@/payload/collections/categories";
+import { ContentTypes } from "@/payload/collections/content-types";
+import { Media } from "@/payload/collections/media";
+import { Platforms } from "@/payload/collections/platforms";
+import { Subcategories } from "@/payload/collections/subcategories";
+import { Users } from "@/payload/collections/users";
+import { env } from "@/shared/config/env";
+
+const dirname = path.dirname(fileURLToPath(import.meta.url));
+
+export default buildConfig({
+  secret: env.PAYLOAD_SECRET,
+  sharp,
+  editor: lexicalEditor({}),
+  collections: [Ads, Platforms, Categories, Subcategories, ContentTypes, Media, Users],
+  db: postgresAdapter({
+    pool: { connectionString: env.DATABASE_URL },
+    // Dev push would auto-sync this config onto whatever DATABASE_URL points at, and that
+    // is the production Neon database. Schema changes go through src/migrations only.
+    push: false,
+  }),
+  typescript: {
+    outputFile: path.resolve(dirname, "payload-types.ts"),
+  },
+  admin: {
+    importMap: {
+      baseDir: path.resolve(dirname, "app/(payload)"),
+    },
+  },
+  plugins: [
+    s3Storage({
+      enabled: true,
+      // Large video uploads go straight from the browser to R2 instead of through
+      // the Next server function, so they skip Vercel's function body-size limit.
+      // Needs a CORS rule on the R2 bucket allowing PUT from the site origins.
+      clientUploads: true,
+      collections: {
+        media: {
+          disablePayloadAccessControl: true,
+          generateFileURL: ({ filename, prefix }) =>
+            `${env.NEXT_PUBLIC_R2_PUBLIC_BASE_URL}/${prefix ? `${prefix}/` : ""}${filename}`,
+        },
+      },
+      bucket: env.R2_BUCKET_NAME,
+      config: {
+        credentials: {
+          accessKeyId: env.R2_ACCESS_KEY_ID,
+          secretAccessKey: env.R2_SECRET_ACCESS_KEY,
+        },
+        region: "auto",
+        endpoint: `https://${env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+        forcePathStyle: true,
+      },
+    }),
+  ],
+});
