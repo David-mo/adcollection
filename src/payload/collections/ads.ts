@@ -112,7 +112,8 @@ export const Ads: CollectionConfig = {
         {
           label: "Classification",
           fields: [
-            { name: "platform", type: "relationship", relationTo: "platforms", required: true },
+            { name: "client", type: "relationship", relationTo: "clients" },
+            { name: "platform", type: "relationship", relationTo: "platforms" },
             { name: "category", type: "relationship", relationTo: "categories" },
             {
               name: "subcategories",

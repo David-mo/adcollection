@@ -14,6 +14,7 @@ const csvStringArray = z
   .default([]);
 
 export const adFilterSchema = z.object({
+  clients: csvStringArray,
   categories: csvStringArray,
   contentTypes: csvStringArray,
   platforms: csvStringArray,

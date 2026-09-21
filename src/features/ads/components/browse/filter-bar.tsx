@@ -5,52 +5,60 @@ import type { TaxonomyRef } from "@/entities/taxonomy";
 import { FilterDropdown } from "./filter-dropdown";
 
 const filterParsers = {
+  clients: parseAsArrayOf(parseAsString).withDefault([]),
   categories: parseAsArrayOf(parseAsString).withDefault([]),
   contentTypes: parseAsArrayOf(parseAsString).withDefault([]),
-  platforms: parseAsArrayOf(parseAsString).withDefault([]),
+  search: parseAsString.withDefault(""),
 };
 
 interface FilterBarProps {
-  categories: TaxonomyRef[];
-  contentTypes: TaxonomyRef[];
-  platforms: TaxonomyRef[];
+  clients: TaxonomyRef[];
+  industries: TaxonomyRef[];
+  videoTypes: TaxonomyRef[];
 }
 
-export function FilterBar({ categories, contentTypes, platforms }: FilterBarProps) {
+export function FilterBar({ clients, industries, videoTypes }: FilterBarProps) {
   const [filters, setFilters] = useQueryStates(filterParsers, { shallow: false });
 
-  const categoryOptions = categories.map((category) => ({
+  const clientOptions = clients.map((client) => ({
+    value: client.slug,
+    label: client.name,
+  }));
+  const industryOptions = industries.map((category) => ({
     value: category.slug,
     label: category.name,
   }));
-  const contentTypeOptions = contentTypes.map((contentType) => ({
+  const videoTypeOptions = videoTypes.map((contentType) => ({
     value: contentType.slug,
     label: contentType.name,
   }));
-  const platformOptions = platforms.map((platform) => ({
-    value: platform.slug,
-    label: platform.name,
-  }));
-
   return (
     <div className="flex flex-wrap items-center gap-filter-gap">
+      <input
+        type="search"
+        aria-label="Search ads"
+        placeholder="Search ads"
+        value={filters.search}
+        onChange={(event) => setFilters({ search: event.target.value })}
+        className="h-10 min-w-56 rounded-sm border border-hairline bg-white px-3 text-sm outline-none focus:border-black"
+      />
       <FilterDropdown
-        label="By Category"
-        options={categoryOptions}
+        label="By Client"
+        options={clientOptions}
+        selected={filters.clients}
+        onChange={(values) => setFilters({ clients: values })}
+      />
+      <FilterDropdown
+        label="By Industry"
+        options={industryOptions}
         selected={filters.categories}
         onChange={(values) => setFilters({ categories: values })}
       />
       <FilterDropdown
-        label="By Style"
-        options={contentTypeOptions}
+        label="By Video Type"
+        options={videoTypeOptions}
         selected={filters.contentTypes}
         onChange={(values) => setFilters({ contentTypes: values })}
-      />
-      <FilterDropdown
-        label="By Platform"
-        options={platformOptions}
-        selected={filters.platforms}
-        onChange={(values) => setFilters({ platforms: values })}
       />
     </div>
   );

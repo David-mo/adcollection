@@ -3,6 +3,7 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { FavoritesLink } from "@/features/favorites/components/favorites-link";
 import { SiteFooter } from "@/shared/components/layout/site-footer";
 import { SiteHeader } from "@/shared/components/layout/site-header";
+import { TopBanner } from "@/shared/components/layout/top-banner";
 import { Toaster } from "@/shared/components/ui/sonner";
 import { TooltipProvider } from "@/shared/components/ui/tooltip";
 import { env } from "@/shared/config/env";
@@ -31,6 +32,9 @@ export default function PublicLayout({ children }: LayoutProps<"/">) {
         <NuqsAdapter>
           <QueryProvider>
             <TooltipProvider>
+              {env.NEXT_PUBLIC_REVIEW_MODE === "true" && (
+                <TopBanner>Private review environment — content may be reset.</TopBanner>
+              )}
               <SiteHeader favoritesLink={<FavoritesLink />} />
               <main className="flex flex-1 flex-col">{children}</main>
               <SiteFooter />

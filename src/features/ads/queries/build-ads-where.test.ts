@@ -35,6 +35,7 @@ describe("buildAdsWhere", () => {
         { thumbnailTitle: { contains: "squatch" } },
         { caption: { contains: "squatch" } },
         { name: { contains: "squatch" } },
+        { "client.name": { contains: "squatch" } },
       ],
     });
   });
@@ -48,6 +49,7 @@ describe("buildAdsWhere", () => {
         { thumbnailTitle: { contains: "dr" } },
         { caption: { contains: "dr" } },
         { name: { contains: "dr" } },
+        { "client.name": { contains: "dr" } },
       ],
     });
   });

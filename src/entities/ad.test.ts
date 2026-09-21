@@ -124,7 +124,7 @@ describe("broken relationships", () => {
   it("returns null instead of throwing when a required media doc was deleted", () => {
     expect(toAdListItem(makeAd({ thumbnail: null as unknown as Media }))).toBeNull();
     expect(toAdListItem(makeAd({ video: null as unknown as Media }))).toBeNull();
-    expect(toAdListItem(makeAd({ platform: null as unknown as Platform }))).toBeNull();
+    expect(toAdListItem(makeAd({ platform: null as unknown as Platform }))?.platform).toBeNull();
   });
 
   it("still throws on an unpopulated id, which is a depth bug rather than missing data", () => {

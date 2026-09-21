@@ -16,6 +16,9 @@ export function buildAdBySlugWhere(slug: string): Where {
 export function buildAdsWhere(filter: AdFilter): Where {
   const where: Where = { ...publishedOnly };
 
+  if (filter.clients.length > 0) {
+    where["client.slug"] = { in: filter.clients };
+  }
   if (filter.categories.length > 0) {
     where["category.slug"] = { in: filter.categories };
   }
@@ -39,6 +42,7 @@ export function buildAdsWhere(filter: AdFilter): Where {
       { thumbnailTitle: { contains: search } },
       { caption: { contains: search } },
       { name: { contains: search } },
+      { "client.name": { contains: search } },
     ];
   }
 

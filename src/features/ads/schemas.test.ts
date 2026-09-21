@@ -6,6 +6,7 @@ describe("adFilterSchema", () => {
     const result = adFilterSchema.parse({});
 
     expect(result).toEqual({
+      clients: [],
       categories: [],
       contentTypes: [],
       platforms: [],

@@ -63,7 +63,7 @@ export function AdHeader({ ad }: AdHeaderProps) {
       </h1>
 
       <dl className="flex flex-col">
-        <InfoRow label="Product/Brand">{ad.companyName}</InfoRow>
+        <InfoRow label="Client">{ad.client?.name ?? ad.companyName}</InfoRow>
 
         <InfoRow label="Website">
           {ad.companyWebsiteUrl ? (
@@ -83,7 +83,6 @@ export function AdHeader({ ad }: AdHeaderProps) {
 
         <InfoRow label="Tags">
           <div className="flex flex-wrap gap-2">
-            <Pill tone="platform">{ad.platform.name}</Pill>
             {ad.category && <Pill tone="default">{ad.category.name}</Pill>}
             {ad.subcategories.map((subcategory) => (
               <Pill key={subcategory.id} tone="default">

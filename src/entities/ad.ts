@@ -1,4 +1,12 @@
-import type { Ad, Category, ContentType, Media, Platform, Subcategory } from "@/payload-types";
+import type {
+  Ad,
+  Category,
+  Client,
+  ContentType,
+  Media,
+  Platform,
+  Subcategory,
+} from "@/payload-types";
 import type { TaxonomyRef } from "./taxonomy";
 import { requirePopulated, toTaxonomyRef } from "./taxonomy";
 
@@ -7,11 +15,12 @@ export type AdListItem = {
   slug: string;
   thumbnailTitle: string;
   companyName: string | null;
+  client: TaxonomyRef | null;
   overallScore: number | null;
   createdAt: string;
   thumbnailUrl: string;
   videoUrl: string;
-  platform: TaxonomyRef;
+  platform: TaxonomyRef | null;
   category: TaxonomyRef | null;
   contentTypes: TaxonomyRef[];
 };
@@ -58,19 +67,21 @@ export function toAdListItem(ad: Ad): AdListItem | null {
   const videoUrl = mediaUrl(ad.video, "video");
   const platform = requirePopulated(ad.platform, "platform");
   const category = requirePopulated(ad.category, "category");
+  const client = requirePopulated<Client>(ad.client, "client");
 
-  if (!thumbnailUrl || !videoUrl || !platform) return null;
+  if (!thumbnailUrl || !videoUrl) return null;
 
   return {
     id: ad.id,
     slug: ad.slug,
     thumbnailTitle: ad.thumbnailTitle,
-    companyName: ad.companyName ?? null,
+    companyName: client?.name ?? ad.companyName ?? ad.name ?? null,
+    client: client ? toTaxonomyRef(client) : null,
     overallScore: ad.overallScore ?? null,
     createdAt: ad.createdAt,
     thumbnailUrl,
     videoUrl,
-    platform: toTaxonomyRef(platform),
+    platform: platform ? toTaxonomyRef(platform) : null,
     category: category ? toTaxonomyRef(category) : null,
     contentTypes: taxonomyRefs(ad.contentTypes, "contentTypes"),
   };

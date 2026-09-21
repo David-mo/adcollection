@@ -48,3 +48,5 @@ certificates
 # Isolated review media and seed scratch
 /media/
 /.review-seed/
+
+/review-uploads/

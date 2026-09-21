@@ -3,6 +3,7 @@ import { anyoneCanRead, onlyLoggedIn } from "@/payload/access";
 
 export const ContentTypes: CollectionConfig = {
   slug: "content-types",
+  labels: { singular: "Video type", plural: "Video types" },
   admin: { useAsTitle: "name" },
   access: {
     read: anyoneCanRead,

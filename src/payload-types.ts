@@ -68,6 +68,7 @@ export interface Config {
   blocks: {};
   collections: {
     ads: Ad;
+    clients: Client;
     platforms: Platform;
     categories: Category;
     subcategories: Subcategory;
@@ -82,6 +83,7 @@ export interface Config {
   collectionsJoins: {};
   collectionsSelect: {
     ads: AdsSelect<false> | AdsSelect<true>;
+    clients: ClientsSelect<false> | ClientsSelect<true>;
     platforms: PlatformsSelect<false> | PlatformsSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     subcategories: SubcategoriesSelect<false> | SubcategoriesSelect<true>;
@@ -175,7 +177,8 @@ export interface Ad {
    */
   creatorHandle?: string | null;
   creatorProfileUrl?: string | null;
-  platform: number | Platform;
+  client?: (number | null) | Client;
+  platform?: (number | null) | Platform;
   category?: (number | null) | Category;
   subcategories?: (number | Subcategory)[] | null;
   contentTypes?: (number | ContentType)[] | null;
@@ -214,12 +217,14 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "platforms".
+ * via the `definition` "clients".
  */
-export interface Platform {
+export interface Client {
   id: number;
   name: string;
   slug: string;
+  industry?: (number | null) | Category;
+  logo?: (number | null) | Media;
   updatedAt: string;
   createdAt: string;
 }
@@ -228,6 +233,17 @@ export interface Platform {
  * via the `definition` "categories".
  */
 export interface Category {
+  id: number;
+  name: string;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "platforms".
+ */
+export interface Platform {
   id: number;
   name: string;
   slug: string;
@@ -309,6 +325,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'ads';
         value: number | Ad;
+      } | null)
+    | ({
+        relationTo: 'clients';
+        value: number | Client;
       } | null)
     | ({
         relationTo: 'platforms';
@@ -399,6 +419,7 @@ export interface AdsSelect<T extends boolean = true> {
   profilePicture?: T;
   creatorHandle?: T;
   creatorProfileUrl?: T;
+  client?: T;
   platform?: T;
   category?: T;
   subcategories?: T;
@@ -413,6 +434,18 @@ export interface AdsSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "clients_select".
+ */
+export interface ClientsSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  industry?: T;
+  logo?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

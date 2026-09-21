@@ -8,8 +8,8 @@ import { ResultsSkeleton } from "@/features/ads/components/browse/results-skelet
 import { getFeaturedAds } from "@/features/ads/queries/get-featured-ads";
 import { parseAdFilter } from "@/features/ads/schemas";
 import { getCategories } from "@/features/taxonomy/queries/get-categories";
+import { getClients } from "@/features/taxonomy/queries/get-clients";
 import { getContentTypes } from "@/features/taxonomy/queries/get-content-types";
-import { getPlatforms } from "@/features/taxonomy/queries/get-platforms";
 import { Container } from "@/shared/components/layout/container";
 import { SectionHeader } from "@/shared/components/layout/section-header";
 
@@ -25,11 +25,11 @@ export default async function Home({ searchParams }: PageProps<"/">) {
   const resolvedSearchParams = await searchParams;
   const filter = parseAdFilter(resolvedSearchParams);
 
-  const [featuredAds, categories, contentTypes, platforms] = await Promise.all([
+  const [featuredAds, industries, videoTypes, clients] = await Promise.all([
     getFeaturedAds(),
     getCategories(),
     getContentTypes(),
-    getPlatforms(),
+    getClients(),
   ]);
 
   return (
@@ -57,7 +57,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
 
       <Container id="browse" className="mt-24 flex flex-col gap-8">
         <SectionHeader title="Browse & Filter">
-          <FilterBar categories={categories} contentTypes={contentTypes} platforms={platforms} />
+          <FilterBar clients={clients} industries={industries} videoTypes={videoTypes} />
         </SectionHeader>
         <Suspense key={JSON.stringify(filter)} fallback={<ResultsSkeleton />}>
           <ResultsGrid filter={filter} />

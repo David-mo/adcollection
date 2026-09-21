@@ -85,8 +85,7 @@ export function AdCard({ ad }: AdCardProps) {
     video.play().catch(() => {});
   }, [isPreviewActive, ad.videoUrl]);
 
-  const detailHref = `/${ad.platform.slug}/${ad.slug}`;
-  const isTikTok = ad.platform.slug === "tiktok";
+  const detailHref = `/ads/${ad.slug}`;
 
   return (
     <div ref={containerRef} className="group flex flex-col">
@@ -138,12 +137,19 @@ export function AdCard({ ad }: AdCardProps) {
           <span className="max-w-measure-card-title text-sm font-medium tracking-normal text-heading">
             {ad.thumbnailTitle}
           </span>
-          <span className="mt-0.5 truncate text-sm text-black/60">{ad.companyName}</span>
+          <span className="mt-0.5 truncate text-sm text-black/60">
+            {ad.client?.name ?? ad.companyName}
+          </span>
         </div>
 
-        <Pill tone={isTikTok ? "platform" : "default"} className="shrink-0">
-          {ad.platform.name}
-        </Pill>
+        <div className="flex shrink-0 gap-1">
+          {ad.category && <Pill tone="default">{ad.category.name}</Pill>}
+          {ad.contentTypes.slice(0, 1).map((type) => (
+            <Pill key={type.id} tone="default">
+              {type.name}
+            </Pill>
+          ))}
+        </div>
       </Link>
     </div>
   );
