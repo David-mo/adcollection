@@ -8,9 +8,6 @@ interface CreatorCardProps {
 
 const WORK_WITH_CREATOR_URL = "https://inbeat.agency/";
 
-const ctaButton =
-  "block rounded-sm px-6 py-3 text-center leading-6 bg-black/10 text-black transition-colors hover:bg-black hover:text-white";
-
 export function CreatorCard({ ad }: CreatorCardProps) {
   const {
     brandHandleName,
@@ -21,8 +18,6 @@ export function CreatorCard({ ad }: CreatorCardProps) {
     caption,
     soundName,
     soundUrl,
-    originalUrl,
-    madeWithInbeat,
   } = ad;
 
   // The video panel slot is the brand's own account, not the creator's - fall back to
@@ -83,51 +78,15 @@ export function CreatorCard({ ad }: CreatorCardProps) {
         </div>
       )}
 
-      {/* Pinned to the bottom of the panel so the CTA aligns with the video's lower edge.
-          The two calls to action are mutually exclusive: ads inBeat produced sell the
-          creator, everything else just credits them and links back to the original post. */}
-      <div className="mt-auto flex flex-col gap-3 pt-8">
-        {madeWithInbeat ? (
-          <a
-            href={WORK_WITH_CREATOR_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="brand-cycle-hover block rounded-sm bg-black px-6 py-3 text-center leading-6 text-white"
-          >
-            Work with this Creator
-          </a>
-        ) : (
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-1">
-              <p className="border-t border-hairline pt-6 text-label text-black/60">
-                Creator Credits
-              </p>
-              {creatorHandle &&
-                (creatorProfileUrl ? (
-                  <a
-                    href={creatorProfileUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-medium text-heading hover:underline w-fit"
-                  >
-                    @{creatorHandle}
-                  </a>
-                ) : (
-                  <span className="font-medium text-heading">@{creatorHandle}</span>
-                ))}
-            </div>
-            {originalUrl && (
-              <a
-                href={originalUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block rounded-sm px-6 py-3 text-center leading-6 bg-black/10 text-black transition-colors hover:bg-black hover:text-white"
-              >
-                Link to Original
-              </a>
-            )}
-          </div>
-        )}
+      <div className="mt-auto pt-8">
+        <a
+          href={WORK_WITH_CREATOR_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="brand-cycle-hover block rounded-sm bg-black px-6 py-3 text-center leading-6 text-white"
+        >
+          Discuss a project
+        </a>
       </div>
     </div>
   );

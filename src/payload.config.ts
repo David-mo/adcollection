@@ -11,6 +11,7 @@ import { Clients } from "@/payload/collections/clients";
 import { ContentTypes } from "@/payload/collections/content-types";
 import { Media } from "@/payload/collections/media";
 import { Platforms } from "@/payload/collections/platforms";
+import { SalesCollections } from "@/payload/collections/sales-collections";
 import { Subcategories } from "@/payload/collections/subcategories";
 import { Users } from "@/payload/collections/users";
 import { env } from "@/shared/config/env";
@@ -21,7 +22,17 @@ export default buildConfig({
   secret: env.PAYLOAD_SECRET,
   sharp,
   editor: lexicalEditor({}),
-  collections: [Ads, Clients, Platforms, Categories, Subcategories, ContentTypes, Media, Users],
+  collections: [
+    Ads,
+    SalesCollections,
+    Clients,
+    Platforms,
+    Categories,
+    Subcategories,
+    ContentTypes,
+    Media,
+    Users,
+  ],
   db: postgresAdapter({
     pool: { connectionString: env.DATABASE_URL },
     // Dev push would auto-sync this config onto whatever DATABASE_URL points at, and that

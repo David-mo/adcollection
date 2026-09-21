@@ -36,6 +36,8 @@ const DIMENSIONS = [
 ] as const;
 
 export function RatingWidget({ ratings, overallScore }: RatingWidgetProps) {
+  if (overallScore == null && Object.values(ratings).every((value) => value == null)) return null;
+
   return (
     <div className="mt-12 mb-rating-gap grid grid-cols-1 items-center gap-10 rounded-lg bg-card-alt p-10 lg:grid-split lg:p-16">
       <div className="grid grid-cols-3 gap-8">

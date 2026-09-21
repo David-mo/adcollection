@@ -16,9 +16,8 @@ import { SectionHeader } from "@/shared/components/layout/section-header";
 export const metadata: Metadata = {
   // The title template only applies to child segments, and this page shares the
   // layout segment, so the prefix is spelled out here.
-  title: "AdCollection - Browse UGC video ads",
-  description:
-    "A deep dive into the strategy behind high-converting ad creative. Browse a curated library of the best-performing video ads, rated on audience grab, watchability, and clarity.",
+  title: "AdCollection - Our work",
+  description: "Explore our work by client, industry, and video type.",
 };
 
 export default async function Home({ searchParams }: PageProps<"/">) {
@@ -36,11 +35,10 @@ export default async function Home({ searchParams }: PageProps<"/">) {
     <>
       <Container className="pt-16 pb-24">
         <h1 className="mb-6 max-w-measure-hero text-display text-heading max-lg:text-display-sm">
-          A deep dive into the strategy behind high-converting ad creative
+          Our work
         </h1>
         <p className="max-w-measure-lede text-base text-black/60">
-          A curated library of the best-performing video ads, rated and broken down so you can learn
-          what actually works.
+          Find the right example by client, industry, or video type.
         </p>
       </Container>
 

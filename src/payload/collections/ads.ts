@@ -59,13 +59,16 @@ export const Ads: CollectionConfig = {
             {
               name: "madeWithInbeat",
               type: "checkbox",
-              defaultValue: false,
-              admin: { description: "Was this ad made using inBeat or by inBeat Agency?" },
+              defaultValue: true,
+              admin: { hidden: true },
             },
             {
               name: "originalUrl",
+              label: "Source URL",
               type: "text",
-              admin: { description: "Link to the original ad (if not made with inBeat)" },
+              admin: {
+                description: "Internal source reference, such as the selected Frame.io file.",
+              },
             },
           ],
         },
@@ -113,8 +116,13 @@ export const Ads: CollectionConfig = {
           label: "Classification",
           fields: [
             { name: "client", type: "relationship", relationTo: "clients" },
-            { name: "platform", type: "relationship", relationTo: "platforms" },
-            { name: "category", type: "relationship", relationTo: "categories" },
+            {
+              name: "platform",
+              type: "relationship",
+              relationTo: "platforms",
+              admin: { hidden: true },
+            },
+            { name: "category", label: "Industry", type: "relationship", relationTo: "categories" },
             {
               name: "subcategories",
               type: "relationship",
@@ -123,6 +131,7 @@ export const Ads: CollectionConfig = {
             },
             {
               name: "contentTypes",
+              label: "Video types",
               type: "relationship",
               relationTo: "content-types",
               hasMany: true,

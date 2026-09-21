@@ -13,7 +13,6 @@ import {
 } from "@/shared/components/ui/sheet";
 import { cn } from "@/shared/lib/utils";
 
-const SUBMIT_AD_URL = "https://teaminbeat.typeform.com/to/odf5iFeS";
 const CREATE_ADS_URL = "https://inbeat.agency/";
 
 // The original nav buttons are 12px/500 with 4px corners, not shadcn's pill defaults.
@@ -23,24 +22,22 @@ const navButton =
 function NavCtas({ className }: { className?: string }) {
   return (
     <div className={cn("flex items-center gap-2", className)}>
-      <a
-        href={SUBMIT_AD_URL}
-        target="_blank"
-        rel="noopener noreferrer"
+      <Link
+        href="/admin/collections/sales-collections"
         className={cn(
           navButton,
           "border border-black/20 bg-transparent text-heading hover:border-black",
         )}
       >
-        Submit an ad
-      </a>
+        Collections
+      </Link>
       <a
         href={CREATE_ADS_URL}
         target="_blank"
         rel="noopener noreferrer"
         className={cn(navButton, "bg-black text-white hover:bg-black/85")}
       >
-        Create Ads
+        Discuss a project
       </a>
     </div>
   );

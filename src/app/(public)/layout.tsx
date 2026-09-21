@@ -17,11 +17,10 @@ export const metadata: Metadata = {
     template: "AdCollection - %s",
     default: "AdCollection",
   },
-  description:
-    "A curated library of the best-performing video ads, rated and broken down so you can learn what actually works.",
+  description: "Explore our work by client, industry, and video type.",
   robots: {
-    index: true,
-    follow: true,
+    index: env.NEXT_PUBLIC_REVIEW_MODE !== "true",
+    follow: env.NEXT_PUBLIC_REVIEW_MODE !== "true",
   },
 };
 
@@ -33,7 +32,7 @@ export default function PublicLayout({ children }: LayoutProps<"/">) {
           <QueryProvider>
             <TooltipProvider>
               {env.NEXT_PUBLIC_REVIEW_MODE === "true" && (
-                <TopBanner>Private review environment — content may be reset.</TopBanner>
+                <TopBanner>Review environment — content may be reset.</TopBanner>
               )}
               <SiteHeader favoritesLink={<FavoritesLink />} />
               <main className="flex flex-1 flex-col">{children}</main>

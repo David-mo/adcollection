@@ -4,8 +4,8 @@ import { Container } from "@/shared/components/layout/container";
 const FOOTER_LINKS = [
   { href: "/", label: "Home", external: false },
   { href: "/favorites", label: "Favorites", external: false },
-  { href: "https://inbeat.agency/", label: "Create UGC Ads", external: true },
-  { href: "https://teaminbeat.typeform.com/to/odf5iFeS", label: "Submit an ad", external: true },
+  { href: "https://inbeat.agency/", label: "Discuss a project", external: true },
+  { href: "/admin/collections/sales-collections", label: "Collections", external: false },
 ] as const;
 
 export function SiteFooter() {
@@ -15,8 +15,7 @@ export function SiteFooter() {
         <div className="space-y-3">
           <span className="text-lg font-semibold">AdCollection</span>
           <p className="text-sm text-white/60">
-            A curated library of the best-performing video ads, rated and broken down so you can
-            learn what actually works.
+            Our work, organized by client, industry, and video type.
           </p>
         </div>
 
@@ -42,8 +41,7 @@ export function SiteFooter() {
 
         <div className="space-y-4">
           <p className="text-sm text-white/60">
-            How we rate? Every ad is scored on audience grab, watchability, and clarity so you can
-            compare performance at a glance.
+            Explore examples from our team and create a collection for your next conversation.
           </p>
         </div>
       </Container>

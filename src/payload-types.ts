@@ -68,6 +68,7 @@ export interface Config {
   blocks: {};
   collections: {
     ads: Ad;
+    'sales-collections': SalesCollection;
     clients: Client;
     platforms: Platform;
     categories: Category;
@@ -83,6 +84,7 @@ export interface Config {
   collectionsJoins: {};
   collectionsSelect: {
     ads: AdsSelect<false> | AdsSelect<true>;
+    'sales-collections': SalesCollectionsSelect<false> | SalesCollectionsSelect<true>;
     clients: ClientsSelect<false> | ClientsSelect<true>;
     platforms: PlatformsSelect<false> | PlatformsSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
@@ -274,6 +276,39 @@ export interface ContentType {
   createdAt: string;
 }
 /**
+ * Create an ordered selection of ads and share it with a private link.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sales-collections".
+ */
+export interface SalesCollection {
+  id: number;
+  name: string;
+  /**
+   * Optional introduction shown on the public collection page.
+   */
+  description?: string | null;
+  /**
+   * Ads appear on the share page in this order.
+   */
+  ads: (number | Ad)[];
+  /**
+   * Turn off to revoke this collection link immediately.
+   */
+  sharingEnabled?: boolean | null;
+  /**
+   * Public view-only link. Save the collection before copying it.
+   */
+  shareUrl?: string | null;
+  shareToken: string;
+  /**
+   * Internal notes. Never shown on the public share page.
+   */
+  privateNotes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
@@ -325,6 +360,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'ads';
         value: number | Ad;
+      } | null)
+    | ({
+        relationTo: 'sales-collections';
+        value: number | SalesCollection;
       } | null)
     | ({
         relationTo: 'clients';
@@ -434,6 +473,21 @@ export interface AdsSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sales-collections_select".
+ */
+export interface SalesCollectionsSelect<T extends boolean = true> {
+  name?: T;
+  description?: T;
+  ads?: T;
+  sharingEnabled?: T;
+  shareUrl?: T;
+  shareToken?: T;
+  privateNotes?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
