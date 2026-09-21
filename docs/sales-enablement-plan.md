@@ -1,75 +1,43 @@
 # Sales enablement implementation plan
 
-Status: proposed implementation scope; local branch `feat/sales-enablement`, based on `main` at `34f2887`. No application changes or deployments yet.
+Updated September 21, 2026 from Dave's scope decisions. Branch: `feat/sales-enablement`.
 
-## Outcome
+## Agreed scope
 
-A salesperson can find a relevant, approved example by capability and industry, present it with a credible explanation and available results, and copy its link within 60 seconds.
+The library contains our work. Sales reps find videos by client, video type and industry, assemble a named collection, and share a view-only link with a prospect. Explanations of the work, performance results and attribution filters are out of scope for this release.
 
-Feedback supplied by Dave: Max wants coverage of UGC, Complex, B-roll, Blink, Mashup, and Static by industry/category; video can launch first. Fouad wants examples and stats available during the client call. These are product inputs, not instructions to contact anyone or publish changes.
+- Video types: editable taxonomy supporting multiple types per video. Initial candidates are UGC, Complex, B-roll, Blink and Mashup. Obtain team definitions for Complex and Blink before assigning them. Static is a later media format.
+- Industries: a separate editable taxonomy. Inspect existing Categories before deciding whether they can serve this purpose without a conflicting migration.
+- Clients: first-class records with name, optional logo and default industry. Each video links to a client; support video-level industry overrides. Migrate existing company names with duplicate review.
+- Collections: signed-in team members create, name, reorder and edit selections. Store centrally with ownership and team handoff support. Clients use view-only share links, with revocation. A collection can contain work from multiple clients.
+- Search: expose existing backend keyword search beside combined filters and extend to client names. Preserve query state in URLs, reset pagination when filters change, and provide clear empty states.
 
-## Existing foundation and constraints
+## Existing foundation
 
-- Next.js 16.3.4, Payload 3.89, PostgreSQL, R2 media, Bun package manager.
-- Category, content-type and platform filtering already exists in `src/features/ads/components/browse/filter-bar.tsx` and `src/features/ads/queries/build-ads-where.ts`.
-- Backend keyword search already matches title, caption and name. Add an obvious browse search control and extend useful matches rather than introduce a search service.
-- `madeWithInbeat` means either made using inBeat or by the agency (`src/payload/collections/ads.ts`). It is insufficient evidence of agency authorship. Preserve it and add explicit attribution rather than silently relabel existing records.
-- Favorites are browser-local. Individual detail links and sharing controls already exist.
-- Ratings are creative evaluations, not campaign performance.
-- Current ad entities require video. Static requires a coordinated schema, mapper, card and detail-view change.
-- Published ads are public; local reads bypass access rules by default. Media URLs are public. Internal notes and confidential assets require real authorization and storage changes.
-- Database schema push is disabled. Use explicit migrations and generated Payload types.
+Next.js 16.3.4 and Payload 3.89, PostgreSQL metadata and Cloudflare R2 media. Existing content types, categories, platforms, browser-local favorites, detail links and copy/share controls can be reused. Actual video files belong in R2, not database rows; collections reference existing video records.
 
-## First increment: find relevant work
+The current Payload admin supports media upload and editing ads. Large media use direct S3-compatible upload with `clientUploads: true`. A browser login is available, but it does not imply a separately configured script/API credential. Users currently use standard authentication, not API keys.
 
-1. Add visible keyword search beside the existing filters; search title, caption, name and company name. Preserve search/filter state in URLs, support clearing filters, and show useful no-results feedback. Reset pagination when filters change.
-2. Relabel style as content type. Reuse the existing taxonomy; inspect actual category values before treating categories as industries. Define Complex and Blink with the team before tagging examples. Do not guess these definitions or automatically retag production data.
-3. Add explicit work attribution: agency-produced, made using inBeat, external reference, or unverified. Default legacy records to unverified; use the old flag only as a review hint. Add an agency-produced filter and clear attribution on cards/detail pages.
-4. Keep the existing library available. A sales entry point should default to agency-produced examples once there is enough verified content. Empty coverage must be visible rather than filled with misattributed work.
+The current public route and data mapper require platform and video relations. Platform must not be inferred from vertical aspect ratio. Resolve this dependency as part of the sales-library implementation. Static media requires coordinated schema, mapper and viewer changes.
 
-Likely changes: ads collection and migration, generated types, entities/ad, filter schemas, query builder, filter bar, cards and public browse page. Keep existing URLs valid.
+## Four-video pilot
 
-Acceptance: combining keyword + content type + category produces matching published examples; refreshing or sharing the URL preserves filters; clearing filters and loading more do not retain stale results; no draft is exposed; agency-produced results contain only explicitly verified records.
+Dave selected the four files in the Frame.io Bumble folder and authorized importing them into Payload. Model split: Astra decisions/review, Sol preparation/import, Gemini video analysis.
 
-## Second increment: explain and substantiate the work
+Workflow: fetch selected versions; retain source file IDs and a local import manifest; have Gemini propose client/type/industry with timestamp evidence; resolve ambiguity; generate thumbnails and web-compatible videos; check duplicates; upload media; create draft records first; verify relationships and playback before publication. Do not infer channel, invent ratings or classify undefined types. Frame.io remains the source, while AdCollection stores a copy for playback.
 
-Add an optional CMS sales-context section:
+No automatic replacement when a Frame.io version changes. Reimports should detect existing source IDs and require an explicit update decision.
 
-- Client objective and public-facing summary of what we delivered.
-- Capability/service tags and a concise client-safe talking point.
-- Optional results entries: metric name, value and unit, timeframe, comparison/baseline where relevant, contextual caveat, public source/case-study link and explicit approval to display.
+## Implementation order and acceptance
 
-Keep editorial evidence and internal source material out of public fields. Only render approved results through an explicit public projection; enforce field access on REST/GraphQL as well as page output if unapproved values are stored. Put campaign results in their own section, separate from creative ratings. Missing results should not be represented as zero or inferred from creative ratings.
+1. Client and industry data model plus filters; align video types with the team's definitions. Use explicit Payload migrations and generated types; database push is disabled.
+2. Team collection creation/editing and client-facing sharing, with owner/team authorization and revocation enforced server-side. Collection privacy does not automatically make existing public R2 media confidential.
+3. Curate initial videos, migrate legacy metadata carefully, and verify the complete sales workflow.
 
-Start with public-safe material, using existing CMS authentication for editors. Do not introduce a sales login merely to view public examples.
+Acceptance: a salesperson finds relevant videos by client/type/industry, creates and orders a collection, and opens the shared view on another device within one minute. Anonymous viewers cannot edit collections or read drafts. Revoked links cease serving the collection. Legacy public URLs continue to work.
 
-Acceptance: legacy examples still render; unapproved results cannot be read anonymously through pages or APIs; approved results show their context; missing sales metadata leaves no empty UI sections.
+## Dave's review workflow
 
-## Third increment: present and share
+Read the repo's AGENTS.md and the relevant installed Next.js guides before coding. Run focused regression tests, typecheck, lint and build. Use a separate Dave-owned Render staging environment with isolated database/storage, working test login and realistic data. Smoke-check collection creation, persistence, editing, sharing/revocation, playback and mobile presentation. Let Dave review the stable staging URL before broader release checks and production approval. Do not alter shared deployment rules or merge into production without release authorization.
 
-Add a presentation view using the existing example URL with a presentation parameter or a dedicated route. Show the creative prominently, client-safe summary, capability labels and approved results. Suppress unrelated recommendations and provide an obvious exit. Reuse the existing copy-link control and ensure the presentation state survives the copied link.
-
-Acceptance: a rep can find an example, play it, explain the work, reference available results and copy its presentation link within 60 seconds. Validate keyboard use and a narrow viewport as well as desktop screen sharing.
-
-## Later increments
-
-- Static support: add a media-kind field defaulting legacy records to video, conditional CMS validation, image rendering and mapper compatibility. Upload support alone is not sufficient.
-- Saved client collections: server-backed ownership, ordered items, client-safe titles and revocable share links. Browser favorites remain useful for personal shortlists.
-- Sales-only notes, private collections and confidential assets: define roles and access across pages, local queries, REST, GraphQL, metadata and object storage before building the UI. An unlisted URL is not authorization.
-- Sharing analytics only after collection sharing is useful.
-
-## Content readiness
-
-Use a small curated set of approved examples spanning the priority industries and capability types. Verify actual authorship, tags and any performance claims. Seed staging with clearly identified non-production records; do not fabricate client results. Track missing coverage explicitly. Taxonomy definitions, approved assets and evidence for results are content dependencies, not reasons to delay building search.
-
-## Review and release
-
-1. Read the installed Next.js guides required by AGENTS.md before implementation.
-2. Implement increment one first; add focused schema/query/entity regression coverage and run the relevant existing tests, typecheck, lint and build.
-3. Inspect deployment ownership and reuse an appropriate staging environment or provision a separate Dave-owned Render service. Use isolated PostgreSQL and R2 storage, staging CMS credentials and correct upload CORS/site URLs. Do not copy production secrets or run migrations against production.
-4. Generate and verify migrations on the isolated database; verify legacy record compatibility and realistic seeded data.
-5. Use Luna for bounded routine test execution/browser smoke checks while Astra handles implementation and failure diagnosis. Smoke-check CMS login, the combined search/filter flow, playback and link reopening.
-6. Give Dave a stable staging URL early with revision, access instructions and known limitations. Add increments two and three there after the first flow is usable.
-7. Complete required release checks after review and obtain approval before a production release or a merge that triggers one. Do not modify shared release settings to enforce this personal review workflow.
-
-Staging resources, credentials, existing taxonomy values and coverage of approved agency work have not yet been inspected. No staging URL or test result is claimed by this plan.
+This is a plan, not an implemented release. No staging deployment is claimed.
