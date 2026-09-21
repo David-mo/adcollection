@@ -1,0 +1,35 @@
+# Separate review service. Production deployment remains unchanged.
+services:
+  - type: web
+    name: adcollection-dave-review
+    runtime: node
+    plan: free
+    branch: feat/sales-enablement
+    buildCommand: npm install -g bun@1.3.5 && bun install --frozen-lockfile && bun run payload migrate && bun run scripts/seed-review.ts && bun run build
+    startCommand: bun run scripts/seed-review.ts && bun run start --hostname 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: adcollection-dave-review-db
+          property: connectionString
+      - key: PAYLOAD_SECRET
+        generateValue: true
+      - key: STORAGE_MODE
+        value: local
+      - key: NEXT_PUBLIC_REVIEW_MODE
+        value: 'true'
+      - key: REVIEW_SEED_CONFIRM
+        value: isolated
+      - key: NEXT_PUBLIC_SITE_URL
+        value: https://adcollection-dave-review.onrender.com
+      - key: REVIEW_ADMIN_EMAIL
+        value: review@adcollection.local
+      - key: REVIEW_ADMIN_PASSWORD
+        generateValue: true
+      - key: NODE_VERSION
+        value: '22'
+databases:
+  - name: adcollection-dave-review-db
+    plan: free
+    region: oregon
+    postgresMajorVersion: '17'
